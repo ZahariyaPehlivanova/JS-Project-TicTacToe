@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tic-tac-toe</title>
+
+    <script src="game.js"></script>
+    <script src="state.js"></script>
+
+    <link rel="stylesheet" href="main.css" type="text/css">
+
+</head>
+<body>
+
+<script>
+    let canvas, ctx, state, mouse = {x:0, y:0};
+    let overlay = document.getElementById("overlay");
+    window.onload = function main() {
+        canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 3*120 + 30;
+        ctx = canvas.getContext("2d");
+        state = new StateManager();
+        state.add(new MenuState("menu"), new GameState("game"), new AboutState("about"));
+        state.set("menu");
+        document.body.appendChild(canvas);
+        canvas.addEventListener("mousemove", mouseMove, false);
+        init();
+        tick();
+    };
+    function init() {
+        state.get("game").init(ONE_PLAYER);
+    }
+    function tick() {
+        console.log(1);
+        window.requestAnimationFrame(tick);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        state.tick(ctx);
+    }
+    function mouseMove(evt) {
+        let el = evt.target;
+        let ox = oy = 0;
+        do {
+            ox += el.offsetLeft;
+            oy += el.offsetTop;
+        } while (el.parentOffset);
+        mouse.x = evt.clientX - ox;
+        mouse.y = evt.clientY - oy;
+    }
+</script>
+
+<div id="overlay">
+    <div class="block">
+        <h2>Tic Tac Toe</h2>
+        <p>by Team MONX</p>
+    </div>
+</div>
+
+</body>
+</html>
